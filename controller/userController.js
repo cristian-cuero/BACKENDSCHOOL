@@ -1,12 +1,21 @@
 const { response, request } = require("express");
-const { User } = require("../model/user");
+const { User } = require("../model/User");
 const bcryptjs = require("bcryptjs");
 const { validarCamposU } = require("../helpers/db-validator");
+const { Tenat } = require("../model/Tenat");
 
 
 //se busca todos los usuarios
 const usariosGet = async (req = request, res = response) => {
-  const usuarios = await User.findAll();
+  const usuarios = await User.findAll({
+    include:[
+      {
+        model: Tenat,
+        attributes: ['subdominio', 'razonSocial' , 'imagen' ]
+      }
+   
+    ]
+  });
   const salt = bcryptjs.genSaltSync();
   res.json({
     usuarios,
@@ -29,7 +38,14 @@ const buscarUsuario = async(req = request , res = response) => {
       ]
     })
   }
-  let user  = await User.findOne({ where: { [parametro] : busca }})
+  let user  = await User.findOne({ 
+    include:[
+      {
+        model: Tenat ,
+        attributes: ['subdominio', 'razonSocial' , 'imagen' ]
+      }
+    ],
+    where: { [parametro] : busca }})
   if(!user){
     user = {};
   }
@@ -38,11 +54,10 @@ const buscarUsuario = async(req = request , res = response) => {
   })
 }
 
-//creamos un usario
+//TODO: Creamos Un Usuario Nuevo Al Sistema 
 const crearUsuario = async (req = request, res = response) => {
-  const { username, password, nombre, apellidos, correo } = req.body;
-    //encriptar contraseña
-  const user = User.build({username, password, nombre, apellidos, correo});
+
+  const user = User.build(req.body);
   try {
     await user.save();
     res.json({
@@ -58,8 +73,8 @@ const crearUsuario = async (req = request, res = response) => {
 //editar usuario 
 const editarUser = async (req = request , res = response) =>{
   const {ID} = req.params;
-  const {  username,correo, ...resto} = req.body;
-  let user = await User.findByPk(ID);
+  const {  username,email,  Idtenats , ...resto} = req.body;
+  let user = await User.findByPk(parseInt(ID));
   if(!user){
     return res.status(400).json({
       msg: "El usuario No Existe"
@@ -69,10 +84,12 @@ const editarUser = async (req = request , res = response) =>{
     user =  await user.update({...resto} ,
       {where : {idu : ID}})
   } catch (error) {
-      console.log(error)
+      res.status(500).json({
+        msg: " Se Presento El Siguinete Error", error
+      })
   }
   res.json(
-    {...resto}
+    {user}
   )
 }
 

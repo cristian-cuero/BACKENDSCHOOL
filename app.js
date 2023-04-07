@@ -1,6 +1,6 @@
 require('dotenv').config();
 pool = require('./database/config')
-const Server = require("./model/server");
+const Server = require("./model/Server");
 
 
 const server = new Server()

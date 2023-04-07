@@ -17,9 +17,7 @@ class Server {
     this.paths = {
       usuarios: "/api/users",
       login: "/api/login",
-      productos: "/api/productos",
-      imagenes: "/api/subirImagen",
-      relproductos: "/api/crearProducto",
+      tenat: "/api/tenat"
     };
 
     this.middleware();
@@ -30,8 +28,8 @@ class Server {
 
   //para que escuche
   listen() {
-    this.app.listen(process.env.port, () => {
-      console.log(`Backend corriendo en http://localhost:${8080}`);
+    this.app.listen(process.env.PORT, () => {
+      console.log(`Backend corriendo en http://localhost:${process.env.PORT}`);
     });
   }
 
@@ -58,9 +56,7 @@ class Server {
   routes() {
     this.app.use(this.paths.usuarios, require("../routes/users"));
     this.app.use(this.paths.login, require("../routes/auth"));
-    this.app.use(this.paths.productos, require("../routes/productos"));
-    this.app.use(this.paths.imagenes, require("../routes/cargaArchivos"));
-    this.app.use(this.paths.relproductos , require('../routes/relproductos'))
+    this.app.use(this.paths.tenat, require("../routes/tenat"));
   }
 }
 //exportar

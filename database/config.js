@@ -5,11 +5,15 @@ const {Sequelize, DataTypes} = require('sequelize');
 
 module.exports= () => {
     const sequelize =  new  Sequelize({
-        dialect: 'mariadb',
+        dialect: 'postgres',
         host : process.env.HOSTDB,
         username: process.env.USERDB,
         password: process.env.PASSWORDDB,
-        database: process.env.DATABASE
+        database: process.env.DATABASE,
+        dialectOptions: {
+            ssl: true,
+            native:true
+          }
     })
     return sequelize
 }
