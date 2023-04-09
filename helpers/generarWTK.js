@@ -23,6 +23,7 @@ const generarJWT = (username = "") => {
     );
   });
 };
+//compronar el JWT
 
 
 module.exports = {
