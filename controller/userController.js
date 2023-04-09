@@ -1,8 +1,8 @@
 const { response, request } = require("express");
 const { User } = require("../model/User");
-const bcryptjs = require("bcryptjs");
-const { validarCamposU } = require("../helpers/db-validator");
+const bcryptjs = require("bcryptjs");;
 const { Tenat } = require("../model/Tenat");
+const { validarCamposU } = require("../helpers/helperComunes");
 
 
 //se busca todos los usuarios
@@ -11,7 +11,7 @@ const usariosGet = async (req = request, res = response) => {
     include:[
       {
         model: Tenat,
-        attributes: ['subdominio', 'razonSocial' , 'imagen' ]
+        attributes: ["subdomain", "businessName", "picture"]
       }
    
     ]
@@ -22,27 +22,26 @@ const usariosGet = async (req = request, res = response) => {
   });
 };
 
-//buscar un usario por algun parametro
-
+//TODO:buscar un usario por algun parametro
 const buscarUsuario = async(req = request , res = response) => {
   const  {parametro, busca} = req.params
   // los corchetes es para tarerlo de manera dinamica el where
   const isparametro = validarCamposU( parametro , User)
-  console.log(isparametro);
+   
   if(!isparametro){
     return res.status(500).json({
       errors: [
         {
-          msg: "No Se Encontro El Parametro",
+          msg: "No Se Encontro El Parametro ", parametro,
         },
       ]
     })
   }
-  let user  = await User.findOne({ 
+  let user  = await User.findAll({ 
     include:[
       {
         model: Tenat ,
-        attributes: ['subdominio', 'razonSocial' , 'imagen' ]
+        attributes:["subdomain", "businessName", "picture"]
       }
     ],
     where: { [parametro] : busca }})
@@ -70,10 +69,10 @@ const crearUsuario = async (req = request, res = response) => {
   
 };
 
-//editar usuario 
+//TODO:editar usuario 
 const editarUser = async (req = request , res = response) =>{
   const {ID} = req.params;
-  const {  username,email,  Idtenats , ...resto} = req.body;
+  const {  username,email, Idtenats,password, ...resto} = req.body;
   let user = await User.findByPk(parseInt(ID));
   if(!user){
     return res.status(400).json({

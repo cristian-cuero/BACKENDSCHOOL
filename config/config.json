@@ -1,0 +1,27 @@
+{
+  "development": {
+    "username": "bdschool_user",
+    "password": "ZcmDLd0Xc8d7zJL9VHvn4mGvOt9U0dP1",
+    "database": "bdschool",
+    "host": "dpg-cgng9rjldisfgrv1gte0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": "true",
+      "native":"true"
+    }
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

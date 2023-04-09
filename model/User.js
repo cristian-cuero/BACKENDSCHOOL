@@ -19,12 +19,12 @@ const User = sequelize.define("User", {
     unique: true,
     allowNull: false,
   },
-  nombre: {
+  name: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
   },
-  apellidos: {
+  lastName: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
@@ -45,17 +45,17 @@ const User = sequelize.define("User", {
     },
   },
   
-  estado :{
+  state :{
     type: DataTypes.BOOLEAN,
     allowNull: true,
     defaultValue: true
   },
-  role: {
+  rol: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: ''
   },
-  imagen: {
+  picture: {
     type: DataTypes.STRING(200),
     allowNull: false,
     defaultValue: "",

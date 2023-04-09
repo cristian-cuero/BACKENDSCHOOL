@@ -14,7 +14,7 @@ const auth = async (req = request, res = response) => {
       include: [
         {
           model: Tenat,
-          attributes: ["subdominio", "razonSocial", "imagen"],
+          attributes: ["subdomain", "businessName", "picture"],
         },
       ],
       where: { username },
@@ -33,7 +33,7 @@ const auth = async (req = request, res = response) => {
       });
     }
     //valido que el usuario este activo
-    if (!user.estado) {
+    if (!user.state) {
       return res.status(400).json({
         msg: "El usuario Esta Inactivo",
       });
@@ -72,7 +72,7 @@ const validacionAuth = async (req = request, res = response) => {
               include: [
                 {
                   model: Tenat,
-                  attributes: ["subdominio", "razonSocial", "imagen"],
+                  attributes: ["subdomain", "businessName", "picture"],
                 },
               ],
               where: { username },
@@ -88,7 +88,7 @@ const validacionAuth = async (req = request, res = response) => {
                 })
             }
             //valido que este activo
-            if(! user.estado){
+            if(! user.state){
                 return res.status(401).json({
                     msg: "usario Inactivo"
                 })

@@ -17,7 +17,7 @@ const getTenats = async (requ = request, res = response) => {
 
 const crearTenat = async (requ = request, res = response) => {
     const nit = new String(requ.body.razonSocial)
-    const schema =  requ.body.nit +  nit.replace(/\s+/g, '').substring(1, 2).toUpperCase()
+    const schema =  requ.body.nit +  requ.body.businessName.replace(/\s+/g, '').substring(0, 2).toUpperCase()
     requ.body.schema = schema
     const tenat = Tenat.build(requ.body)
     try {

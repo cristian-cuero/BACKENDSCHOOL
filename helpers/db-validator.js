@@ -2,9 +2,10 @@
 const { Op } = require("sequelize");
 const { User } = require("../model/User");
 const { Tenat } = require("../model/Tenat");
+const { request, response } = require("express");
 
-const emailExiste = async (correo = "") => {
-  const user = await User.findOne({ where: { email: correo } });
+const emailExiste = async (email = "") => {
+  const user = await User.findOne({ where: { email } });
   if (user) {
     throw new Error(` el correo ${correo} ya esta registrado`);
   }
@@ -28,39 +29,21 @@ const validarInquilino = async (Idtenats = "") => {
 
 ///// valida la colecciones permitidas para actualizar la imageb
 
-const coleccionesPermitidas = (coleccion = "", colecciones = []) => {
-  const incluida = colecciones.includes(coleccion);
-  if (!incluida) {
-    throw new Error(
-      `la coleccion ${coleccion} no es permitida colecciones permitidas ${colecciones}`
-    );
-  }
-  //para que siga la funcion
-  return true;
-};
 
-// se usa para validar los campos en las busquedas de las base de datos
-//recibe el modelo y parametro y se valida si el parametro de la busqueda existe en los atributos
-const validarCamposU = (parametro = "", modelo) => {
-  const parametros = Object.keys(modelo.getAttributes());
-  if (parametros.includes(parametro) === false) {
-    return false;
-  } else {
-    return true;
-  }
-};
 
-const validaTenatUnico = async (req, res, next) => {
-  const { nit, razonSocial } = req.body;
+
+const validaTenatUnico = async (req = request, res = response, next) => {
+  const { nit, businessName, subdomain } = req.body;
+
   const tenat =  await Tenat.findOne({
     where: {
-      [Op.or]: [{ nit}, { razonSocial}], 
+      [Op.or]: [{ nit}, { businessName},  {subdomain}], 
     },
   });
   
   if(tenat){
     return res.status(401).json({
-      msg: `El  Inquilino Con Nit ${nit} O Razon Social ${razonSocial} Ya Existe`
+      msg: `El  Inquilino Con Nit ${nit} O Razon Social ${businessName} O Subdomino ${subdomain} Ya Existe`
     })
   }
   next();
@@ -69,8 +52,6 @@ const validaTenatUnico = async (req, res, next) => {
 module.exports = {
   emailExiste,
   validarUser,
-  validarCamposU,
-  coleccionesPermitidas,
   validarInquilino,
   validaTenatUnico,
 };

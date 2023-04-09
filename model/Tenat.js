@@ -18,44 +18,48 @@ const Tenat = sequelize.define("Tenat", {
     unique: true
 
   },
-  razonSocial: {
+  businessName: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
     unique: true
   },
-  dirreccion: {
+
+  address:{
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
+
   },
-  idResponsable:{
+  responsibleId:{
     type: DataTypes.STRING(20),
     allowNull: false,
     defaultValue: "",
 
   },
-  nombreResponsable: {
+  
+  responsibleName: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
   },
-  apellidosResponsable: {
+  responsibleLastName: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
   },
-  telefonoResponsable: {
+  responsiblePhone: {
     type: DataTypes.STRING(100),
     allowNull: false,
     defaultValue: "",
   },
-   subdominio: {
+  subdomain: {
     type: DataTypes.STRING(200),
     allowNull: false,
     defaultValue: "",
+    unique: true
   },
-  correo: {
+  email: {
     type: DataTypes.STRING(255),
     allowNull: false,
     validate: {
@@ -68,12 +72,12 @@ const Tenat = sequelize.define("Tenat", {
     allowNull: false,
     defaultValue: "",
   },
-  estado :{
+  state :{
     type: DataTypes.BOOLEAN,
     allowNull: true,
     defaultValue: true
   },
-  imagen: {
+  picture: {
     type: DataTypes.STRING,
     allowNull: false,
     defaultValue: "",
