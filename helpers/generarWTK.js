@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 const { User } = require("../model/User");
 const { request, response } = require("express");
 
-const generarJWT = (username = "") => {
-  const payload = { username };
+const generarJWT = (username = "", rol = '') => {
+  const payload = { username , rol};
   return new Promise((resolve, reject) => {
     jwt.sign(
       payload,

@@ -39,7 +39,7 @@ const auth = async (req = request, res = response) => {
       });
     }
     //gebera el JWT
-    const token = await generarJWT(user.username);
+    const token = await generarJWT(user.username, user.rol);
     return res.json({
       user,
       token,
