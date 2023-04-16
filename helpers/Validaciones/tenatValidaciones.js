@@ -61,6 +61,6 @@ exports.validate = (method) => {
         body("User.email", "el email no es valido").isEmail().custom(emailExiste),
       ];
     }
-   
+    
   }
 };

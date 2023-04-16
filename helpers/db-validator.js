@@ -1,6 +1,5 @@
-
 const { User } = require("../model/User");
-const { Tenat } = require("../model/Tenat")
+const { Tenat } = require("../model/Tenat");
 const { Op } = require("sequelize");
 
 const emailExiste = async (email = "") => {
@@ -26,11 +25,31 @@ const validarInquilino = async (Idtenats = "") => {
   }
 };
 
-///// valida la colecciones permitidas para actualizar la imageb
+const ValidarInquilinoUpdate = async (tenatC = {}) => {
 
+  if (tenatC) {
+   
+    const tenat = await Tenat.findOne({
+      where: {
+        businessName: tenatC.businessName,
+        [Op.not]: [{ idu: tenatC.idu }],
+      },
+    });
+    if (tenat) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return true;
+  }
+};
+
+///// valida la colecciones permitidas para actualizar la imageb
 
 module.exports = {
   emailExiste,
   validarUser,
   validarInquilino,
+  ValidarInquilinoUpdate,
 };

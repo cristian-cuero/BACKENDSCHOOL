@@ -3,15 +3,14 @@ const { Tenat } = require("../model/Tenat");
 const { sincroSchema } = require("../database/Schema");
 const { User } = require("../model/User");
 const { validarCamposU } = require("../helpers/helperComunes");
-
-
+const { ValidarInquilinoUpdate } = require("../helpers/db-validator");
+const { SubirImagen } = require("../helpers/SubirImagen");
 
 //TODO: busca Todos Tenat OEl tenat Del Usuario Administrador
 const getTenats = async (requ = request, res = response) => {
-
-  console.log('request.params :>> ', requ.params);
+  console.log("request.params :>> ", requ.params);
   //all tenats
-  if(!requ.params.nit & requ.usuario.rol === 'ROOT'){
+  if (!requ.params.nit & (requ.usuario.rol === "ROOT")) {
     try {
       const tenats = await Tenat.findAll();
       res.json({
@@ -20,40 +19,53 @@ const getTenats = async (requ = request, res = response) => {
     } catch (error) {
       res.status(500).json({
         msg: "Se Presento El Siguiente Error",
-        error
+        error,
       });
     }
-  }else{
+  } else {
     try {
-      const tenat = await Tenat.findOne({ where:{ nit: requ.params.nit}  })
+      const tenat = await Tenat.findOne({ where: { nit: requ.params.nit } });
       res.json({
-        tenat
-      })
+        tenat,
+      });
     } catch (error) {
       res.status(500).json({
         msg: "Se Presento El Siguiente Error",
-        error
-      }); 
+        error,
+      });
     }
   }
-  
 };
 
+//TODO: Busca El Tenat Por Algun Filtro
 
-//TODO: Busca El Tenat Por Algun Filtro 
-
-const getFilterTenats = async = (requ = request , res = response) => {
-
+const getFilterTenats = async (requ = request, res = response) => {
   //valido  que los paramtros son validos para la busqueda
-  const parametros =  Object.keys(requ.body) 
-  
-  const isparametro = validarCamposU( parametros , Tenat)
-  res.json({
-    msg: isparametro
-  })
-}
+  const parametros = Object.keys(requ.body);
 
-//TODO:Crear Un  Nuevo Tenat Y SU Configuracion Inciial 
+  const isparametro = validarCamposU(parametros, Tenat);
+  if (isparametro) {
+    try {
+      const tenat = await Tenat.findAll({
+        where: requ.body,
+      });
+      res.json({
+        tenat,
+      });
+    } catch (error) {
+      res.status(500).json({
+        msg: "Se Presento El Siguiente Error",
+        error,
+      });
+    }
+  } else {
+    return res.status(400).json({
+      msg: "Parametros De Busqueda Invailidos",
+    });
+  }
+};
+
+//TODO:Crear Un  Nuevo Tenat Y SU Configuracion Inciial
 const crearTenat = async (requ = request, res = response) => {
   const { Tenat: tenat, User: user } = requ.body;
   //**Creacion Del Tenat  , Del usuario Admin Y Del Schema *
@@ -93,8 +105,75 @@ const crearTenat = async (requ = request, res = response) => {
   }
 };
 
+const updateTenat = async (requ = request, res = response) => {
+ 
+  const { id } = requ.params;
+  const { nit, schema, subdomain,  ...data } = requ.body;
+  try {
+    const dataT = {
+      businessName: data.businessName,
+      idu: id,
+    };
+    const resP = await ValidarInquilinoUpdate(dataT);
+    if(resP){
+      return res.status(400).json({
+        msg:'No Se Puede Actualizar El Tenat , validar Que La Razon Social Sea Unica'
+      })
+    }
+    let tenat = await Tenat.findByPk(id);
+    if(!tenat){
+      return res.status(400).json({
+        msg:'El tenat No Existe'
+      })
+    }
+    tenat = await tenat.update({...data})
+    return res.json({
+      tenat,
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: error,
+    });
+  }
+};
+
+const updateTenatImagen = async (requ = request , res= response) => {
+
+const {id} = requ.params
+
+try {
+  const tenat =  await Tenat.findByPk(id)
+
+  if(!tenat){
+    return res.status(400).json({
+      msg: 'El Tenat No Existe'
+    })
+  }
+
+  const url =  await SubirImagen(tenat.picture,  requ.files.archivo)
+  
+  if(url != null){
+    tenat.update({picture: url})
+    res.json({
+      picture: tenat.picture
+    })
+  }else{
+    return res.status(400).json({
+      msg: 'Error Al Subir La Imagen'
+    })
+  }
+  
+} catch (error) {
+  res.status(500).json({
+    msg: error,
+  });
+}
+
+}
 module.exports = {
   getTenats,
   crearTenat,
-  getFilterTenats
+  getFilterTenats,
+  updateTenat,
+  updateTenatImagen
 };

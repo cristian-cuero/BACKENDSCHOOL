@@ -3,11 +3,14 @@ const {
   getTenats,
   crearTenat,
   getFilterTenats,
+  updateTenat,
+  updateTenatImagen,
 } = require("../controller/TenatController");
 const { validarJWT } = require("../middlewares/validarJWT");
 const { validate } = require("../helpers/Validaciones/tenatValidaciones");
 const { validarCampos } = require("../middlewares/validarcampos");
 const { validaTenatUnico } = require("../middlewares/ValidarTenatUnico");
+const { validarArchivo } = require("../middlewares/ValidarArchivo");
 
 const routes = new Router();
 
@@ -30,4 +33,13 @@ routes.post(
   crearTenat
 );
 
+//TODO: Editar Un Tentar
+routes.put("/:id", [validarJWT("ROOT", "ADMIN")], updateTenat);
+
+//TODO: ASignarImagen A TENAT
+routes.put(
+  "/picture/:id",
+  [validarJWT("ROOT", "ADMIN"), validarArchivo],
+  updateTenatImagen
+);
 module.exports = routes;
