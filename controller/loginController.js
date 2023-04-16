@@ -11,10 +11,11 @@ const auth = async (req = request, res = response) => {
 
   try {
     const user = await User.findOne({
+      attributes: ['idu', 'username', 'state', 'password', 'rol' ],
       include: [
         {
           model: Tenat,
-          attributes: ["subdomain", "businessName", "picture"],
+          attributes: ["nit", "subdomain", "businessName", "picture"],
         },
       ],
       where: { username },
@@ -38,10 +39,18 @@ const auth = async (req = request, res = response) => {
         msg: "El usuario Esta Inactivo",
       });
     }
+    const userR=  {
+        idu: user.idu,
+        username: user.username,
+        state: user.state,
+        rol: user.rol,
+        Tenat: user.Tenat
+
+    }
     //gebera el JWT
-    const token = await generarJWT(user.username, user.rol);
+    const token = await generarJWT(userR);
     return res.json({
-      user,
+      user:userR,
       token,
     });
   } catch (error) {
@@ -65,17 +74,19 @@ const validacionAuth = async (req = request, res = response) => {
             msg: "Token Invalido"
         })
     }else{
-        const {username}  = token
+        const {user:userToken}  = token
+        
 
         try {
             const user = await User.findOne({
+              attributes: ["idu", "username", "name", "lastName", "picture", "email", "rol", "state"],
               include: [
                 {
                   model: Tenat,
-                  attributes: ["subdomain", "businessName", "picture"],
+                  attributes: [ "nit","subdomain", "businessName", "picture"],
                 },
               ],
-              where: { username },
+              where: { username: userToken.username },
                 
         
             });
@@ -93,9 +104,15 @@ const validacionAuth = async (req = request, res = response) => {
                     msg: "usario Inactivo"
                 })
             }
-            //pendiente validar que el subdominio sea del schema
-        
-            const token2 = await generarJWT(user.username);
+            const userR=  {
+              idu: user.idu,
+              username: user.username,
+              state: user.state,
+              rol: user.rol,
+              Tenat: user.Tenat
+      
+          }
+            const token2 = await generarJWT(userR);
             return res.json({
                 user,
                 token: token2

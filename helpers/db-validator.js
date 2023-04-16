@@ -1,8 +1,7 @@
 
-const { Op } = require("sequelize");
 const { User } = require("../model/User");
-const { Tenat } = require("../model/Tenat");
-const { request, response } = require("express");
+const { Tenat } = require("../model/Tenat")
+const { Op } = require("sequelize");
 
 const emailExiste = async (email = "") => {
   const user = await User.findOne({ where: { email } });
@@ -30,28 +29,8 @@ const validarInquilino = async (Idtenats = "") => {
 ///// valida la colecciones permitidas para actualizar la imageb
 
 
-
-
-const validaTenatUnico = async (req = request, res = response, next) => {
-  const { nit, businessName, subdomain } = req.body;
-
-  const tenat =  await Tenat.findOne({
-    where: {
-      [Op.or]: [{ nit}, { businessName},  {subdomain}], 
-    },
-  });
-  
-  if(tenat){
-    return res.status(401).json({
-      msg: `El  Inquilino Con Nit ${nit} O Razon Social ${businessName} O Subdomino ${subdomain} Ya Existe`
-    })
-  }
-  next();
-};
-
 module.exports = {
   emailExiste,
   validarUser,
   validarInquilino,
-  validaTenatUnico,
 };

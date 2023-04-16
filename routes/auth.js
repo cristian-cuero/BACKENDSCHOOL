@@ -15,7 +15,7 @@ routes.post('/' ,[
 ],auth
 )
 
-routes.get('/' , validacionAuth)
+routes.get('/checkAuth' , validacionAuth)
 
 
 module.exports = routes;

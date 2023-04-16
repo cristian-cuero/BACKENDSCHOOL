@@ -3,7 +3,6 @@ const { usariosGet, crearUsuario, buscarUsuario, editarUser } = require('../cont
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validarcampos');
 const { validate } = require('../helpers/Validaciones/userValidaciones');
-const { comprobarJWT } = require('../helpers/generarWTK');
 const { validarJWT } = require('../middlewares/validarJWT');
 
 // import all controllers
@@ -12,12 +11,12 @@ const { validarJWT } = require('../middlewares/validarJWT');
 const routes = new Router();
 
 // Add routes
-routes.get('/' ,  usariosGet)
+routes.get('/' , validarJWT(),  usariosGet)
 
 //busca de usuarios por un parametro
 
 routes.get('/:parametro/:busca',[
-    validarJWT,
+    validarJWT(),
     check('parametro').notEmpty().withMessage('El Parametro Es Obligatorio'),
     check('busca').notEmpty().withMessage('El Dato De La Busqueda Es Obligatorio'),
     validarCampos
@@ -27,14 +26,14 @@ buscarUsuario
 
 //creacion de un usuarioi a la BD
 routes.post('/' , [
-    validarJWT,
+    validarJWT(),
     validate('createUser'),
     validarCampos
 ], crearUsuario)
 
 //editar usuario
 routes.put('/:ID' , [
-    validarJWT,
+    validarJWT(),
     validate('editUser'),
     validarCampos
 ],

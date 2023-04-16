@@ -1,5 +1,9 @@
 const sequelize = require('../database/config')()
 const queryInterface = sequelize.getQueryInterface();
+const bcryptjs = require("bcryptjs");
+
+
+const salt = bcryptjs.genSaltSync();
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, sequelize) {
@@ -8,9 +12,9 @@ module.exports = {
       name: 'ADMIN',
       lastName: 'ADMIN',
       email: 'example@example.com',
-      password: '12345678',
+      password: bcryptjs.hashSync('12345678', salt),
       state: true,
-      rol: 'root',
+      rol: 'ROOT',
       createdAt: new Date(),
       updatedAt: new Date()
     }]);

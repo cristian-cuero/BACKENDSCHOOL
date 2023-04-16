@@ -1,14 +1,33 @@
 const { Router, response } = require("express");
-const { getTenats, crearTenat } = require("../controller/TenatController");
+const {
+  getTenats,
+  crearTenat,
+  getFilterTenats,
+} = require("../controller/TenatController");
 const { validarJWT } = require("../middlewares/validarJWT");
-const { validaTenatUnico } = require("../helpers/db-validator");
+const { validate } = require("../helpers/Validaciones/tenatValidaciones");
+const { validarCampos } = require("../middlewares/validarcampos");
+const { validaTenatUnico } = require("../middlewares/ValidarTenatUnico");
 
 const routes = new Router();
 
-// busca todo los inquilinos
-routes.get("/", [validarJWT], getTenats);
+//TODO: Busca Un Tenatn Por Un Filtro En Particularidad
 
-//crear Un Tenat  Nuevo
-routes.post("/", [validarJWT, validaTenatUnico], crearTenat);
+routes.get("/filterTenat", [validarJWT(["ROOT"])], getFilterTenats);
+
+// TODO: busca todo los inquilinos o busca El Tenat Del Administrador
+routes.get("/:nit?", validarJWT(["ROOT", "ADMIN"]), getTenats);
+
+//TODO: crear Un Tenat  Nuevo
+routes.post(
+  "/",
+  [
+    validarJWT(["ROOT"]),
+    validaTenatUnico,
+    validate("crearTenat"),
+    validarCampos,
+  ],
+  crearTenat
+);
 
 module.exports = routes;
