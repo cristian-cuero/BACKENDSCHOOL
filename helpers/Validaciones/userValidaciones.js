@@ -1,10 +1,11 @@
 const { body , query} = require("express-validator");
-const { validarInquilino, emailExiste, validarUser } = require("../db-validator");
+const { validarInquilino, emailExiste, validarUser, RolesValidos } = require("../db-validator");
 
 exports.validate = (method) => {
   switch (method) {
     case "createUser": {
       return [
+        
         body("username", "El Nombre De Usuario Es Obligatorio")
           .notEmpty()
           .isLength({ min: 4, max: 30 })
@@ -26,9 +27,8 @@ exports.validate = (method) => {
          body("email", "el email no es valido")
          .isEmail()
          .custom(emailExiste),
-         body("Idtenats", "Id De Enquilino Invalido").isNumeric()
-         .custom(validarInquilino),
-         body("rol", "El Rol Es Obligatorio").notEmpty()
+         body("rol")
+         .custom(RolesValidos)
       ];
     }
     case "editUser":{

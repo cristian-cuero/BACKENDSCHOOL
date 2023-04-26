@@ -11,12 +11,12 @@ const { validarJWT } = require('../middlewares/validarJWT');
 const routes = new Router();
 
 // Add routes
-routes.get('/' , validarJWT(),  usariosGet)
+routes.get('/' , validarJWT(["ROOT", "ADMIN"] ),  usariosGet)
 
 //busca de usuarios por un parametro
 
 routes.get('/:parametro/:busca',[
-    validarJWT(),
+    validarJWT(["ROOT", "ADMIN"]),
     check('parametro').notEmpty().withMessage('El Parametro Es Obligatorio'),
     check('busca').notEmpty().withMessage('El Dato De La Busqueda Es Obligatorio'),
     validarCampos
@@ -26,14 +26,14 @@ buscarUsuario
 
 //creacion de un usuarioi a la BD
 routes.post('/' , [
-    validarJWT(),
+    validarJWT(["ROOT", "ADMIN"]),
     validate('createUser'),
     validarCampos
 ], crearUsuario)
 
 //editar usuario
 routes.put('/:ID' , [
-    validarJWT(),
+    validarJWT(["ROOT", "ADMIN"]),
     validate('editUser'),
     validarCampos
 ],

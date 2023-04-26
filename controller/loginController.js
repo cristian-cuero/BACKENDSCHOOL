@@ -15,7 +15,7 @@ const auth = async (req = request, res = response) => {
       include: [
         {
           model: Tenat,
-          attributes: ["nit", "subdomain", "businessName", "picture"],
+          attributes: ["nit", "subdomain", "businessName", "picture", "schema"],
         },
       ],
       where: { username },

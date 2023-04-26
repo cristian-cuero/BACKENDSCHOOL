@@ -28,7 +28,12 @@ const validarCamposU = (parametro, modelo) => {
   return notExist
 };
 
+//helper Encargado De Validar Si El Que Esta Haciendo la Correcion , Actualizacion Es El Mismo usuario
+ const validaUserIsEqualEdit = ( user = {}, idparams) => {
+    return user.idu === idparams ? true : false
+ }
 module.exports = {
   coleccionesPermitidas,
   validarCamposU,
+  validaUserIsEqualEdit
 };

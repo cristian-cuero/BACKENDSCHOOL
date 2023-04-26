@@ -45,6 +45,15 @@ const ValidarInquilinoUpdate = async (tenatC = {}) => {
   }
 };
 
+const RolesValidos = (rol) => {
+  const roles = ["ADMIND", "ROOT", "ASSISTANT"]
+ if(!roles.includes(rol)){
+  throw new Error("Este Rol Es Invalido");
+ }else{
+  return true
+ }
+}
+
 ///// valida la colecciones permitidas para actualizar la imageb
 
 module.exports = {
@@ -52,4 +61,5 @@ module.exports = {
   validarUser,
   validarInquilino,
   ValidarInquilinoUpdate,
+  RolesValidos
 };

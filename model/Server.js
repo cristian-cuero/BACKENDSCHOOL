@@ -42,6 +42,7 @@ class Server {
     this.app.use(cors());
     //lectura y pareson de json
     this.app.use(expres.json());
+
     //acepta archiva desde peticiones rest es una configuracion
     this.app.use(
       fileUpload({

@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const { Tenat } = require("../model/Tenat");
 
 const validaTenatUnico = async (req = request, res = response, next) => {
-    const { nit, businessName, subdomain } = req.body.Tenat;
+    const { nit, businessName, subdomain } = req.body;
     if (nit && businessName && subdomain) {
       const tenat = await Tenat.findOne({
         where: {

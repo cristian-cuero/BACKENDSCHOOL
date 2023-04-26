@@ -4,6 +4,7 @@ const { User } = require("../model/User");
 
 const validarJWT = (roles = [])  =>  async (req = request, res = response, next) => {
   // console.log('req :>> ', req);
+  const isvalidaRol = false
   const token = req.header("x-token");
 
   if (!token) {
@@ -32,7 +33,13 @@ const validarJWT = (roles = [])  =>  async (req = request, res = response, next)
       });
     }
 
-    if(roles.length > 0){
+    //esta funciones son por si el usuarioo esta editando  el mismo ya uqe ahi no se requiere rol
+    if(req.baseUrl === '/api/users' && req.params){
+
+      
+    }
+    if(roles.length > 0 && isvalidaRol === false){
+      
         if(!roles.includes(user.rol)){
             return res.status(401).json({
                 msg: "El Usuario No Puede realizar Esta Opcion",
