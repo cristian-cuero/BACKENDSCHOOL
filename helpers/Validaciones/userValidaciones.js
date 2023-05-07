@@ -28,7 +28,8 @@ exports.validate = (method) => {
          .isEmail()
          .custom(emailExiste),
          body("rol")
-         .custom(RolesValidos)
+         .custom(RolesValidos),
+         body("idtenats").custom(validarInquilino)
       ];
     }
     case "editUser":{

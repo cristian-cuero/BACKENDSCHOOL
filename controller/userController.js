@@ -4,6 +4,7 @@ const bcryptjs = require("bcryptjs");
 const { Tenat } = require("../model/Tenat");
 const { validarCamposU } = require("../helpers/helperComunes");
 const { Op } = require("sequelize");
+const { SubirImagen } = require("../helpers/SubirImagen");
 
 //se busca todos los usuarios
 const usariosGet = async (req = request, res = response) => {
@@ -12,15 +13,16 @@ const usariosGet = async (req = request, res = response) => {
     attributes: ["subdomain", "businessName", "picture"],
   };
   if (req.usuario.rol === "ADMIN") {
-    consulta.where = {  nit: req.usuario.Tenat.nit}
-   
+    consulta.where = { nit: req.usuario.Tenat.nit };
   }
 
   const usuarios = await User.findAll({
     include: [consulta],
-    where:{ idu: {
-      [Op.ne]: req.usuario.idu
-    }}
+    where: {
+      idu: {
+        [Op.ne]: req.usuario.idu,
+      },
+    },
   });
   const salt = bcryptjs.genSaltSync();
   res.json({
@@ -61,28 +63,47 @@ const buscarUsuario = async (req = request, res = response) => {
   });
 };
 
-//TODO: Creamos Un Usuario Nuevo Al Sistema
+//TODO: Creamos Un Usuario Nuevo Al Sistema Funcion Solo Valida para ROOT O ADMIN
 const crearUsuario = async (req = request, res = response) => {
- 
   const user = User.build(req.body);
-  try {
-    console.log("HOLa")
+  let url = '';
+  
+  if (req.usuario.rol != "ROOT") {
     const tenat = await Tenat.findOne({
-      attributes: ['idu'],
-      where: { 'nit': req.usuario.Tenat.nit },
-    })
-
-    if(!tenat){
+      attributes: ["idu"],
+      where: { nit: req.usuario.Tenat.nit },
+    });
+    if (!tenat) {
       return res.status(400).json({
-        msg:"Inquilo Invalido"
-      })
+        msg: "Inquilo Invalido",
+      });
+    }
+    user.Idtenats = tenat.idu;
+  } else {
+    if (!req.body.Idtenats || req.body.Idtenats.trim() === "") {
+      return res.status(400).json({
+        msg: "Inquilo Invalido",
+      });
     }
 
-     user.Idtenats = tenat.idu
-     await user.save();
-     res.json({
+  }
+  try {
+    if(req.files){
+      url = await SubirImagen("", req.files.image);
+    }
+    user.picture = url
+  } catch (error) {
+    
+    return res.status(500).json({
+      msg: "Error Al Subir La Imagen"
+    })
+  }
+  try {
+
+    await user.save();
+    res.json({
       user,
-     });
+    });
   } catch (error) {
     res.status(500).json({ error });
   }
