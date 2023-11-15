@@ -11,7 +11,7 @@ module.exports= () => {
         password: process.env.PASSWORDDB,
         database: process.env.DATABASE,
         dialectOptions: {
-            ssl: false,
+            ssl: true,
             native:true
           }
     })
