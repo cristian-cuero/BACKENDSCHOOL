@@ -104,11 +104,15 @@ const crearTenat = async (requ = request, res = response) => {
   user.rol = "ADMIN";
  
   let url = ''
+  let url2 = ''
   if (requ.files) {
   
     //console.log('requ.body :>>' ,requ.files.image);
     try {
       url =  await SubirImagen('',  requ.files.image) 
+      if(requ.files.imageUser){
+        url2 =  await SubirImagen('',  requ.files.imageUser) 
+      }
     } catch (error) {
       console.log('error :>> ', error);
       return res.status(400).json({
@@ -131,6 +135,7 @@ const crearTenat = async (requ = request, res = response) => {
       tenat.picture = url;
       await tenatc.save();
       user.Idtenats = tenatc.idu;
+      user.picture = url2;
       const userC = User.build(user);
       await userC.save();
       res.json({

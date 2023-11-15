@@ -28,7 +28,7 @@ routes.post(
     validarJWT(["ROOT"]),
     validaTenatUnico,
     validate("crearTenat"),
-    validarCampos,
+    validarCampos, 
   ],
   crearTenat
 );

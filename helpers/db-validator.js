@@ -46,7 +46,7 @@ const ValidarInquilinoUpdate = async (tenatC = {}) => {
 };
 
 const RolesValidos = (rol) => {
-  const roles = ["ADMIND", "ROOT", "ASSISTANT"]
+  const roles = ["ADMIN", "ROOT", "ASSISTANT"]
  if(!roles.includes(rol)){
   throw new Error("Este Rol Es Invalido");
  }else{

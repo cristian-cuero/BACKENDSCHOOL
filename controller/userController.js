@@ -82,7 +82,7 @@ const crearUsuario = async (req = request, res = response) => {
   } else {
     if (!req.body.Idtenats || req.body.Idtenats.trim() === "") {
       return res.status(400).json({
-        msg: "Inquilo Invalido",
+        msg: "Inquilo Invalido", 
       });
     }
 

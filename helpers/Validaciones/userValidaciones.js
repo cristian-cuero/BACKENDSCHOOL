@@ -6,7 +6,7 @@ exports.validate = (method) => {
     case "createUser": {
       return [
         
-        body("username", "El Nombre De Usuario Es Obligatorio")
+        body("username", "El Nombre De Usuario Es Obligatorio") 
           .notEmpty()
           .isLength({ min: 4, max: 30 })
           .withMessage(
