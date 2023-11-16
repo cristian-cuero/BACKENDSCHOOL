@@ -16,7 +16,7 @@ const routes = new Router();
 
 //TODO: Busca Un Tenatn Por Un Filtro En Particularidad
 
-routes.get("/filterTenat", [validarJWT(["ROOT"])], getFilterTenats);
+routes.post("/filterTenat", [validarJWT(["ROOT"])], getFilterTenats);
 
 // TODO: busca todo los inquilinos o busca El Tenat Del Administrador
 routes.get("/:nit?", validarJWT(["ROOT", "ADMIN"]), getTenats);
